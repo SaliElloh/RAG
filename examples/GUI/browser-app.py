@@ -33,6 +33,8 @@ SOFTWARE.
 
 from typing import Any
 import gradio as gr
+
+# langchain
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
 
@@ -69,7 +71,6 @@ def add_text(history, text: str):
     history = history + [(text, "")]
     return history
 
-
 class my_app:
     def __init__(self, OPENAI_API_KEY: str = None) -> None:
         self.OPENAI_API_KEY: str = OPENAI_API_KEY
@@ -99,6 +100,8 @@ class my_app:
     def build_chain(self, file: str):
         documents, file_name = self.process_file(file)
         # Load embeddings model
+
+        # CHANGE THIS EMBEDDINGS MODEL
         embeddings = OpenAIEmbeddings(openai_api_key=self.OPENAI_API_KEY)
         pdfsearch = Chroma.from_documents(
             documents,
@@ -130,6 +133,7 @@ def get_response(history, query, file):
 def render_file(file):
     doc = pymupdf.open(file.name)
     page = doc[app.N]
+    
     # Render the page as a PNG image with a resolution of 150 DPI
     pix = page.get_pixmap(dpi=150)
     image = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
